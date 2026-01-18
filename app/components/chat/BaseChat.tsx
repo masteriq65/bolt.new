@@ -21,6 +21,7 @@ interface BaseChatProps {
   enhancingPrompt?: boolean;
   promptEnhanced?: boolean;
   input?: string;
+  setInput?: (value: string) => void;
   handleStop?: () => void;
   sendMessage?: (event: React.UIEvent, messageInput?: string) => void;
   handleInputChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -33,6 +34,24 @@ const EXAMPLE_PROMPTS = [
   { text: 'Create a cookie consent form using Material UI' },
   { text: 'Make a space invaders game' },
   { text: 'How do I center a div?' },
+];
+
+const QUICK_STARTS = [
+  {
+    title: 'Start a new app',
+    description: 'Generate a project plan and scaffold key routes.',
+    prompt: 'Plan and scaffold a small app. Include routes, data model, and next steps.',
+  },
+  {
+    title: 'Debug an issue',
+    description: 'Explain the error and propose a fix step-by-step.',
+    prompt: 'Help me debug an error. Ask for details and suggest a fix plan.',
+  },
+  {
+    title: 'Refactor code',
+    description: 'Improve structure without changing behavior.',
+    prompt: 'Refactor existing code for clarity and maintainability while keeping functionality.',
+  },
 ];
 
 const TEXTAREA_MIN_HEIGHT = 76;
@@ -50,6 +69,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
       promptEnhanced = false,
       messages,
       input = '',
+      setInput,
       sendMessage,
       handleInputChange,
       enhancePrompt,
@@ -79,6 +99,29 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                 <p className="mb-4 text-center text-bolt-elements-textSecondary">
                   Bring ideas to life in seconds or get help on existing projects.
                 </p>
+                <div className="mt-6 grid gap-3 md:grid-cols-3">
+                  {QUICK_STARTS.map((quickStart) => (
+                    <button
+                      key={quickStart.title}
+                      className="group rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-2 p-4 text-left transition-theme hover:border-bolt-elements-item-borderActive hover:bg-bolt-elements-background-depth-3"
+                      onClick={() => {
+                        if (!setInput) {
+                          return;
+                        }
+
+                        setInput(quickStart.prompt);
+                        textareaRef?.current?.focus();
+                      }}
+                      type="button"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-bolt-elements-textPrimary">{quickStart.title}</span>
+                        <span className="i-ph:arrow-up-right text-bolt-elements-textTertiary transition-theme group-hover:text-bolt-elements-textPrimary" />
+                      </div>
+                      <p className="mt-2 text-xs text-bolt-elements-textSecondary">{quickStart.description}</p>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
             <div
